@@ -17,7 +17,6 @@ HIT_SOUND = None
 DEFAULT_FONT = ""
 
 
-
 def init():
     global TANK_TEXTURE, MOVEMENT_ARROWS_TEXTURE, SHOOT_SOUND, BOUNCE_SOUND, HIT_SOUND, DEFAULT_FONT
 
@@ -63,6 +62,12 @@ def init():
                 os.path.join(ROOT_PATH, "Assets/Textures/orange_tank.png")), (TANK_WIDTH, TANK_HEIGHT)),
             "bullet": pygame.transform.scale(pygame.image.load(
                 os.path.join(ROOT_PATH, "Assets/Textures/orange_bullet.png")), (BULLET_WIDTH, BULLET_HEIGHT))
+        },
+        {
+            "tank": pygame.transform.scale(pygame.image.load(
+                os.path.join(ROOT_PATH, "Assets/Textures/black_tank.png")), (TANK_WIDTH, TANK_HEIGHT)),
+            "bullet": pygame.transform.scale(pygame.image.load(
+                os.path.join(ROOT_PATH, "Assets/Textures/black_bullet.png")), (BULLET_WIDTH, BULLET_HEIGHT))
         }
     ]
 

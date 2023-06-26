@@ -4,6 +4,7 @@ import assets
 from constants import DEFAULT_KEYBOARD_KEYBINDING, JOYSTICK_DEADZONE, TANK_COLOR_NAMES
 
 
+# Menu parent class (menus overwrite it)
 class Menu:
     def __init__(self, game):
         self.game = game
@@ -36,6 +37,7 @@ class Menu:
         pygame.display.flip()
 
 
+# Main title and player count choice
 class MainMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
@@ -43,37 +45,26 @@ class MainMenu(Menu):
         self.title_label = Label(self.game.window_width / 2, self.game.window_height * 0.2, "Tank game", 80, center=True)
         self.labels.append(self.title_label)
 
-        buttons_x = self.mid_x
-        buttons_y = {"two": self.game.window_height * 0.4,
-                     "three": self.game.window_height * 0.5,
-                     "four": self.game.window_height * 0.6,
-                     "five": self.game.window_height * 0.7,
-                     "six": self.game.window_height * 0.8,
-                     "seven": self.game.window_height * 0.9}
+        self.nb_buttons = 6
+        labels_text = ["2 Joueurs", "3 Joueurs", "4 Joueurs", "5 Joueurs", "6 Joueurs", "7 Joueurs", "8 Joueurs"]
+        button_positions = [
+            (self.game.window_width / 2 - 120, self.game.window_height * 0.40),
+            (self.game.window_width / 2 + 120, self.game.window_height * 0.40),
+            (self.game.window_width / 2 - 120, self.game.window_height * 0.50),
+            (self.game.window_width / 2 + 120, self.game.window_height * 0.50),
+            (self.game.window_width / 2 - 120, self.game.window_height * 0.60),
+            (self.game.window_width / 2 + 120, self.game.window_height * 0.60),
+            (self.game.window_width / 2 - 120, self.game.window_height * 0.70),
+            (self.game.window_width / 2 - 120, self.game.window_height * 0.70),
+        ]
+        self.player_count_buttons = []
 
-        two_players_label = Label(buttons_x, buttons_y["two"], "2 Joueurs", 16, center=True)
-        self.btn_two = Button(buttons_x, buttons_y["two"], 100, 40, two_players_label, center=True)
-        self.buttons.append(self.btn_two)
-
-        three_players_label = Label(buttons_x, buttons_y["three"], "3 Joueurs", 16, center=True)
-        self.btn_three = Button(buttons_x, buttons_y["three"], 100, 40, three_players_label, center=True)
-        self.buttons.append(self.btn_three)
-
-        four_players_label = Label(buttons_x, buttons_y["four"], "4 Joueurs", 16, center=True)
-        self.btn_four = Button(buttons_x, buttons_y["four"], 100, 40, four_players_label, center=True)
-        self.buttons.append(self.btn_four)
-
-        five_players_label = Label(buttons_x, buttons_y["five"], "5 Joueurs", 16, center=True)
-        self.btn_five = Button(buttons_x, buttons_y["five"], 100, 40, five_players_label, center=True)
-        self.buttons.append(self.btn_five)
-
-        six_players_label = Label(buttons_x, buttons_y["six"], "6 Joueurs", 16, center=True)
-        self.btn_six = Button(buttons_x, buttons_y["six"], 100, 40, six_players_label, center=True)
-        self.buttons.append(self.btn_six)
-
-        seven_players_label = Label(buttons_x, buttons_y["seven"], "7 Joueurs", 16, center=True)
-        self.btn_seven = Button(buttons_x, buttons_y["seven"], 100, 40, seven_players_label, center=True)
-        self.buttons.append(self.btn_seven)
+        # Create the buttons to choose the number of players
+        for i in range(self.nb_buttons):
+            label = Label(button_positions[i][0], button_positions[i][1], labels_text[i], 16, center=True)
+            button = Button(button_positions[i][0], button_positions[i][1], 100, 40, label, center=True)
+            self.player_count_buttons.append(button)
+            self.buttons.append(button)
 
         self.left_click_pressed = False  # Mouse button currently pressed, not released yet
 
@@ -102,32 +93,14 @@ class MainMenu(Menu):
 
         # Check if a button has been pressed
         if left_click_released:
-            if self.btn_two.hovered:
-                self.game.set_nb_players(2)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("2 players")
-            elif self.btn_three.hovered:
-                self.game.set_nb_players(3)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("3 players")
-            elif self.btn_four.hovered:
-                self.game.set_nb_players(4)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("4 players")
-            elif self.btn_five.hovered:
-                self.game.set_nb_players(5)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("5 players")
-            elif self.btn_six.hovered:
-                self.game.set_nb_players(6)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("6 players")
-            elif self.btn_seven.hovered:
-                self.game.set_nb_players(7)
-                self.game.current_menu = PlayerInputMenu(self.game, 0)
-                # print("7 players")
+            for i in range(self.nb_buttons):
+                if self.player_count_buttons[i].hovered:
+                    # print((i + 2), "players")
+                    self.game.set_nb_players(i + 2)
+                    self.game.current_menu = PlayerInputMenu(self.game, 0)
 
 
+# Choose keyboard or contraller input
 class PlayerInputMenu(Menu):
     def __init__(self, game, player_id):
         Menu.__init__(self, game)
