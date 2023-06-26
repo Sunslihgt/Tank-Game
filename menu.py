@@ -4,12 +4,14 @@ import assets
 from constants import DEFAULT_KEYBOARD_KEYBINDING, JOYSTICK_DEADZONE, TANK_COLOR_NAMES
 
 
-# Menu parent class (menus overwrite it)
+# Menu parent class (menus override it)
 class Menu:
     def __init__(self, game):
         self.game = game
-        self.buttons = []
-        self.labels = []
+        self.buttons = []  # Buttons to render
+        self.labels = []  # Labels to render
+        self.images_list_dict = []  # Images and their info
+        # An image should be of type {"image": image, "rect": rect, "angle", float}
 
         self.mid_x = self.game.window_width / 2
         self.mid_y = self.game.window_height / 2
@@ -28,9 +30,18 @@ class Menu:
     def draw_menu(self, window: pygame.Surface):
         window.fill(BACKGROUND_COLOR, (0, 0, self.game.window_width, self.game.window_height))
 
+        # Images
+        for image_dict in self.images_list_dict:
+            angle = image_dict["angle"]
+            rotated_image = pygame.transform.rotate(pygame.transform.scale(image_dict["image"], image_dict["size"]), int(angle))
+            image_rect = rotated_image.get_rect(center=image_dict["center"])
+            window.blit(rotated_image, image_rect)
+
+        # Buttons
         for button in self.buttons:
             button.draw_button(window)
 
+        # Labels
         for label in self.labels:
             label.draw_label(window)
 
@@ -42,20 +53,46 @@ class MainMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
 
-        self.title_label = Label(self.game.window_width / 2, self.game.window_height * 0.2, "Tank game", 80, center=True)
+        screen_mid_x = self.game.window_width / 2
+        screen_mid_y = self.game.window_height / 2
+
+        # Main title
+        self.title_label = Label(self.game.window_width / 2, self.game.window_height * 0.3, "Tank game", 80, center=True)
         self.labels.append(self.title_label)
 
+        # Tank images
+        self.nb_tanks = 4
+        tank_image_size = (100, 100)
+        tank_angles = [200, 141, 251, 80]
+        tank_pos = [
+            (self.game.window_width * 0.3, self.game.window_height * 0.2),
+            (self.game.window_width * 0.7, self.game.window_height * 0.4),
+            (self.game.window_width * 0.8, self.game.window_height * 0.8),
+            (self.game.window_width * 0.2, self.game.window_height * 0.6)
+        ]
+        self.tank_rotation_speed = 0.3
+        self.tank_images = []
+
+        for i in range(self.nb_tanks):
+            tank_image_dict = {
+                "image": assets.TANK_TEXTURE[i]["tank"], "angle": tank_angles[i],
+                "size": tank_image_size, "center": tank_pos[i]
+            }
+            self.tank_images.append(tank_image_dict)
+            self.images_list_dict.append(tank_image_dict)
+
+        # Buttons to choose player count
         self.nb_buttons = 6
         labels_text = ["2 Joueurs", "3 Joueurs", "4 Joueurs", "5 Joueurs", "6 Joueurs", "7 Joueurs", "8 Joueurs"]
         button_positions = [
-            (self.game.window_width / 2 - 120, self.game.window_height * 0.40),
-            (self.game.window_width / 2 + 120, self.game.window_height * 0.40),
-            (self.game.window_width / 2 - 120, self.game.window_height * 0.50),
-            (self.game.window_width / 2 + 120, self.game.window_height * 0.50),
-            (self.game.window_width / 2 - 120, self.game.window_height * 0.60),
-            (self.game.window_width / 2 + 120, self.game.window_height * 0.60),
-            (self.game.window_width / 2 - 120, self.game.window_height * 0.70),
-            (self.game.window_width / 2 - 120, self.game.window_height * 0.70),
+            (screen_mid_x - 120, self.game.window_height * 0.40),
+            (screen_mid_x + 120, self.game.window_height * 0.40),
+            (screen_mid_x - 120, self.game.window_height * 0.50),
+            (screen_mid_x + 120, self.game.window_height * 0.50),
+            (screen_mid_x - 120, self.game.window_height * 0.60),
+            (screen_mid_x + 120, self.game.window_height * 0.60),
+            (screen_mid_x - 120, self.game.window_height * 0.70),
+            (screen_mid_x - 120, self.game.window_height * 0.70),
         ]
         self.player_count_buttons = []
 
@@ -98,6 +135,10 @@ class MainMenu(Menu):
                     # print((i + 2), "players")
                     self.game.set_nb_players(i + 2)
                     self.game.current_menu = PlayerInputMenu(self.game, 0)
+
+        # Rotate tank images
+        for i in range(self.nb_tanks):
+            self.tank_images[i]["angle"] += self.tank_rotation_speed * (-1)**i
 
 
 # Choose keyboard or contraller input

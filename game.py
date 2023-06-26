@@ -1,6 +1,8 @@
 import random
 import time
 
+import pygame
+
 import assets
 from constants import *
 from menu import MainMenu
@@ -19,10 +21,11 @@ class Game:
             monitorInfo = pygame.display.Info()
             self.window_width = monitorInfo.current_w
             self.window_height = monitorInfo.current_h - 80
+            self.window = pygame.display.set_mode((self.window_width, self.window_height), pygame.FULLSCREEN)
         else:  # Use the given window size
             self.window_width = window_width
             self.window_height = window_height
-        self.window = pygame.display.set_mode((self.window_width, self.window_height))
+            self.window = pygame.display.set_mode((self.window_width, self.window_height))
 
         # Window size dependant variables
         self.grid_x_offset = (self.window_width / 4 + (self.window_width * 3 / 4) % CELL_WIDTH) // 2

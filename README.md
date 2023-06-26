@@ -8,4 +8,8 @@ Spawn in a maze-like arena and fight against enemy players by shooting them.
 ### TO-DO LIST
 - Add nicer background
 - Add arena textures
-- Add a game logo in the main screen
+- Improve/Fix sounds
+
+### DONE LIST
+- Added support for updatable images in menus
+- Added tank images in the main screen (spinning tanks)
