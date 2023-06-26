@@ -82,8 +82,9 @@ class MainMenu(Menu):
             self.images_list_dict.append(tank_image_dict)
 
         # Buttons to choose player count
-        self.nb_buttons = 6
-        labels_text = ["2 Joueurs", "3 Joueurs", "4 Joueurs", "5 Joueurs", "6 Joueurs", "7 Joueurs", "8 Joueurs"]
+        self.nb_buttons = 7
+        # Create text list ["2 Joueurs", ..., "8 Joueurs"]
+        labels_text = [str(i + 2) + " Joueurs" for i in range(self.nb_buttons)]
         button_positions = [
             (screen_mid_x - 120, self.game.window_height * 0.40),
             (screen_mid_x + 120, self.game.window_height * 0.40),
@@ -91,8 +92,7 @@ class MainMenu(Menu):
             (screen_mid_x + 120, self.game.window_height * 0.50),
             (screen_mid_x - 120, self.game.window_height * 0.60),
             (screen_mid_x + 120, self.game.window_height * 0.60),
-            (screen_mid_x - 120, self.game.window_height * 0.70),
-            (screen_mid_x - 120, self.game.window_height * 0.70),
+            (screen_mid_x, self.game.window_height * 0.70)
         ]
         self.player_count_buttons = []
 
