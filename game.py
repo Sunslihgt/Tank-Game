@@ -325,8 +325,9 @@ class Game:
         if self.debug:
             # print(f"Tick time: Players {player_tick_time} ms\tBullets {bullet_tick_time} ms")
 
-            if len(self.bullets) > 0:  # Each bullet takes about 1.2 to 1.5 ms to tick (avg is 1.3 ms)
-                print(f"{len(self.bullets)} bullets ->\t{(bullet_tick_time/len(self.bullets))} ms per bullet")
+            if len(self.bullets) > 0:  # Each bullet takes from 0.4 to 0.6 ms to tick (avg is 0.5 ms)
+                print(f"{len(self.bullets)} bullets ->\t{(round(bullet_tick_time/len(self.bullets), 3))} ms per bullet")
+            pass
 
     def move_bullets(self):
         for bullet in self.bullets:

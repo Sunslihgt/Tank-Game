@@ -1,4 +1,4 @@
-"""
+""" LEGACY CODE
 # Check collisions between polygon and rectangle
 def check_collisions_polygon_rectangle(poly, rect):
     for i in range(len(poly)):
@@ -71,61 +71,62 @@ def check_collisions_polygons(a, b):
     return False
 
 
-# Check if two lines intersect
+# Check if two lines intersect a=((ax1, ay1), (ax2, ay2)) and b=((bx1, by1), (bx2, by2))
 def check_collision_lines(a, b) -> bool:
     # Check if two segment intersect (using wikipedia's line-line intersection, section "Given two points on each line segment").
-    # There is an intersection if 0 <= t <= 1 and 0 <= 0 <= 1.
-    # if ((a[0][0] - a[1][0]) * (b[0][1] - b[1][1]) - (a[0][1] - a[1][1]) * (b[0][0] - b[1][0])) == 0:
-    #     print("Oh no it's broken !")
-    #     return False
-    # if 0 <= (a[0][0] - b[0][0]) * (b[0][1] - b[1][1]) - (a[0][1] - b[0][1]) * (b[0][0] - b[1][0]) <= 1 or 0 <= (a[0][0] - b[0][0]) * (a[0][1] - a[1][1]) - (a[0][1] - b[0][1]) * (a[0][0] - a[1][0]) <= 1:
-    #     return True
+    # This method works with any pair of segments that are not parallel (even vertical and perpendicular).
+    # There is an intersection if 0 <= t <= 1 and 0 <= u <= 1.
+    denominator = (a[0][0] - a[1][0]) * (b[0][1] - b[1][1]) - (a[0][1] - a[1][1]) * (b[0][0] - b[1][0])
+
+    if denominator == 0:  # If the lines are parallel
+        print("Oh no it's broken !")
+        return False
+    else:
+        # Calculate t and u, and check if (0 <= u <= 1 and 0 <= t <= 1)
+        if 0 <= ((a[0][0] - b[0][0]) * (b[0][1] - b[1][1]) - (a[0][1] - b[0][1]) * (b[0][0] - b[1][0])) / denominator <= 1 and 0 <= ((a[0][0] - b[0][0]) * (a[0][1] - a[1][1]) - (a[0][1] - b[0][1]) * (a[0][0] - a[1][0])) / denominator <= 1:
+            return True
+
+    return False
+
+    # if a[0][0] == a[1][0] or b[0][0] == b[1][0]:  # One line is vertical
+    #     if a[0][0] == a[1][0] and b[0][0] == b[1][0]:  # Lines are vertical
+    #         # Check if the vertical lines intersect
+    #         if a[0][0] == b[0][0] and \
+    #                 (b[0][1] <= a[0][1] <= b[1][1] or b[0][1] <= a[1][1] <= b[1][1] or a[0][1] <= b[0][1] <= a[1][1]
+    #                  or a[0][1] <= b[1][1] <= a[1][1] or b[0][1] >= a[0][1] >= b[1][1] or b[0][1] >= a[1][1] >= b[1][1]
+    #                  or a[0][1] >= b[0][1] >= a[1][1] or a[0][1] >= b[1][1] >= a[1][1]):
+    #             return True
+    #         else:
+    #             return False
+    #     else:  # Only one line is parallel, check as if lines where random
+    #         return (point_orientation(a[0], a[1], b[0]) != point_orientation(a[0], a[1], b[1]) and
+    #                 point_orientation(b[0], b[1], a[0]) != point_orientation(b[0], b[1], a[1]))
+    # elif (a[1][1] - a[0][1]) / (a[1][0] - a[0][0]) == (b[1][1] - b[0][1]) / (b[1][0] - b[0][0]):  # Lines are parallel
+    #     # Check if lines have the same y-intersect
+    #     a_slope = (a[1][1] - a[0][1]) / (a[1][0] - a[0][0])
+    #     b_slope = (b[1][1] - b[0][1]) / (b[1][0] - b[0][0])
     #
-    # return False
-
-    # if ((a[0][0] * a[1][1] - a[0][1] * a[1][0]) * (b[0][0] - b[1][0]) - (a[0][0] - a[1][0]) * (b[0][0] * b[1][1] - b[0][1] * b[1][0])) / ((a[0][0] - a[1][0]) * (b[0][1] - b[1][1]) - (a[0][1] - a[1][1]) * (b[0][0] - b[1][0])) == 0:
-    #     return False
-    # return
-
-    if a[0][0] == a[1][0] or b[0][0] == b[1][0]:  # One line is vertical
-        if a[0][0] == a[1][0] and b[0][0] == b[1][0]:  # Lines are vertical
-            # Check if the vertical lines intersect
-            if a[0][0] == b[0][0] and \
-                    (b[0][1] <= a[0][1] <= b[1][1] or b[0][1] <= a[1][1] <= b[1][1] or a[0][1] <= b[0][1] <= a[1][1]
-                     or a[0][1] <= b[1][1] <= a[1][1] or b[0][1] >= a[0][1] >= b[1][1] or b[0][1] >= a[1][1] >= b[1][1]
-                     or a[0][1] >= b[0][1] >= a[1][1] or a[0][1] >= b[1][1] >= a[1][1]):
-                return True
-            else:
-                return False
-        else:  # Only one line is parallel, check as if lines where random
-            return (point_orientation(a[0], a[1], b[0]) != point_orientation(a[0], a[1], b[1]) and
-                    point_orientation(b[0], b[1], a[0]) != point_orientation(b[0], b[1], a[1]))
-    elif (a[1][1] - a[0][1]) / (a[1][0] - a[0][0]) == (b[1][1] - b[0][1]) / (b[1][0] - b[0][0]):  # Lines are parallel
-        # Check if lines have the same y-intersect
-        a_slope = (a[1][1] - a[0][1]) / (a[1][0] - a[0][0])
-        b_slope = (b[1][1] - b[0][1]) / (b[1][0] - b[0][0])
-
-        # p = y - mx
-        if a[0][1] - a_slope * a[0][0] == b[0][1] - b_slope * b[0][0]:  # Lines are aligned
-            if (b[0][1] <= a[0][1] <= b[1][1] or b[0][1] <= a[1][1] <= b[1][1] or a[0][1] <= b[0][1] <= a[1][1]
-                    or a[0][1] <= b[1][1] <= a[1][1] or b[0][1] >= a[0][1] >= b[1][1] or b[0][1] >= a[1][1] >= b[1][1]
-                    or a[0][1] >= b[0][1] >= a[1][1] or a[0][1] >= b[1][1] >= a[1][1]):
-                return True
-            else:
-                return False
-        else:
-            return False
-    else:  # Lines are not parallel
-        # Use orientation of point to determine
-        # return (point_orientation(a[0], b[0], a[1]) != point_orientation(a[0], b[0], b[1]) and
-        #         point_orientation(a[1], b[1], a[0]) != point_orientation(a[1], b[1], b[0]))
-        return (point_orientation(a[0], a[1], b[0]) != point_orientation(a[0], a[1], b[1]) and
-                point_orientation(b[0], b[1], a[0]) != point_orientation(b[0], b[1], a[1]))
+    #     # p = y - mx
+    #     if a[0][1] - a_slope * a[0][0] == b[0][1] - b_slope * b[0][0]:  # Lines are aligned
+    #         if (b[0][1] <= a[0][1] <= b[1][1] or b[0][1] <= a[1][1] <= b[1][1] or a[0][1] <= b[0][1] <= a[1][1]
+    #                 or a[0][1] <= b[1][1] <= a[1][1] or b[0][1] >= a[0][1] >= b[1][1] or b[0][1] >= a[1][1] >= b[1][1]
+    #                 or a[0][1] >= b[0][1] >= a[1][1] or a[0][1] >= b[1][1] >= a[1][1]):
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         return False
+    # else:  # Lines are not parallel
+    #     # Use orientation of point to determine
+    #     # return (point_orientation(a[0], b[0], a[1]) != point_orientation(a[0], b[0], b[1]) and
+    #     #         point_orientation(a[1], b[1], a[0]) != point_orientation(a[1], b[1], b[0]))
+    #     return (point_orientation(a[0], a[1], b[0]) != point_orientation(a[0], a[1], b[1]) and
+    #             point_orientation(b[0], b[1], a[0]) != point_orientation(b[0], b[1], a[1]))
 
 
 # Returns whether three points are in counter-clockwise order or not
-def point_orientation(p1, p2, p3):
-    return (p2[1] - p1[1]) * (p3[0] - p2[0]) - (p3[1] - p2[1]) * (p2[0] - p1[0]) < 0
+# def point_orientation(p1, p2, p3):
+#     return (p2[1] - p1[1]) * (p3[0] - p2[0]) - (p3[1] - p2[1]) * (p2[0] - p1[0]) < 0
 
 
 # def vector_angle():
