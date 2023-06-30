@@ -75,8 +75,8 @@ DEFAULT_KEYBOARD_KEYBINDING = [
 JOYSTICK_DEADZONE = 0.6  # Joystick deadzone (avoids axis noise)
 
 # Tank colors
-TANK_COLOR_NAMES = ["bleu", "rouge", "vert", "jaune", "violet", "gris", "orange"]
-TANK_TEXT_COLORS = [(18, 131, 180), (204, 58, 24), (85, 147, 85), (239, 228, 64), (107, 10, 204), (165, 165, 165), (255, 127, 39)]
+TANK_COLOR_NAMES = ["bleu", "rouge", "vert", "jaune", "violet", "gris", "orange", "noir"]
+TANK_TEXT_COLORS = [(18, 131, 180), (204, 58, 24), (85, 147, 85), (239, 228, 64), (107, 10, 204), (165, 165, 165), (255, 127, 39), (40, 40, 40)]
 
 FPS = 60
 
