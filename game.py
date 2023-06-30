@@ -18,14 +18,15 @@ class Game:
 
         # Window
         if window_width == 1500 and window_height == 960:  # Use the monitor's resolution
-            monitorInfo = pygame.display.Info()
-            self.window_width = monitorInfo.current_w
-            self.window_height = monitorInfo.current_h - 80
-            self.window = pygame.display.set_mode((self.window_width, self.window_height), pygame.FULLSCREEN)
+            monitor_info = pygame.display.Info()
+            self.window_width = monitor_info.current_w
+            self.window_height = monitor_info.current_h - 80
+            flags = pygame.FULLSCREEN | pygame.DOUBLEBUF  # Fullscreen and double buffering for better performance
+            self.window = pygame.display.set_mode((self.window_width, self.window_height), flags)
         else:  # Use the given window size
             self.window_width = window_width
             self.window_height = window_height
-            self.window = pygame.display.set_mode((self.window_width, self.window_height))
+            self.window = pygame.display.set_mode((self.window_width, self.window_height), pygame.DOUBLEBUF)
 
         # Window size dependant variables
         self.grid_x_offset = (self.window_width / 4 + (self.window_width * 3 / 4) % CELL_WIDTH) // 2
@@ -36,7 +37,7 @@ class Game:
         # Initialize textures
         assets.init()
         self.DEFAULT_FONT = assets.DEFAULT_FONT
-        self.obstacle_colors = list([(random.randint(0, 200), random.randint(0, 200), random.randint(0, 200)) for i in range(200)])
+        self.obstacle_colors = list([(random.randint(0, 200), random.randint(0, 200), random.randint(0, 200)) for _ in range(200)])
 
         # Sounds
         self.sound_channel = pygame.mixer.Channel(0)
