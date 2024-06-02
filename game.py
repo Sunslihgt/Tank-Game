@@ -1,8 +1,6 @@
 import random
 import time
 
-import pygame
-
 import assets
 from constants import *
 from menu import MainMenu
